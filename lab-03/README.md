@@ -213,6 +213,49 @@ All query parameters are optional and have built-in default values. They can be 
 ]
 ```
 
+### GET /books/?order_by=price&order=DESC (Sorted by Price Descending)
+```json
+[
+  { "id": 9, "title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "price": 1400, "pages": 1312 },
+  { "id": 4, "title": "Designing Data-Intensive Applications", "author": "Martin Kleppmann", "price": 1200, "pages": 616 },
+  { "id": 15, "title": "Database System Concepts", "author": "Abraham Silberschatz", "price": 1150, "pages": 1376 },
+  { "id": 11, "title": "Cracking the Coding Interview", "author": "Gayle Laakmann McDowell", "price": 950, "pages": 687 },
+  { "id": 7, "title": "Node.js Design Patterns", "author": "Mario Casciaro", "price": 890, "pages": 660 },
+  { "id": 10, "title": "Refactoring: Improving the Design of Existing Code", "author": "Martin Fowler", "price": 790, "pages": 448 },
+  { "id": 1, "title": "The Pragmatic Programmer", "author": "David Thomas, Andrew Hunt", "price": 750, "pages": 352 },
+  { "id": 12, "title": "Head First Design Patterns", "author": "Eric Freeman", "price": 720, "pages": 694 },
+  { "id": 14, "title": "Clean Architecture", "author": "Robert C. Martin", "price": 680, "pages": 432 },
+  { "id": 2, "title": "Clean Code", "author": "Robert C. Martin", "price": 650, "pages": 464 }
+]
+```
+
+### GET /books/?limit=3&offset=3 (Pagination: Page 2 of 3 Books)
+```json
+[
+  {
+    "id": 4,
+    "title": "Designing Data-Intensive Applications",
+    "author": "Martin Kleppmann",
+    "price": 1200,
+    "pages": 616
+  },
+  {
+    "id": 5,
+    "title": "JavaScript: The Good Parts",
+    "author": "Douglas Crockford",
+    "price": 380,
+    "pages": 176
+  },
+  {
+    "id": 6,
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "price": 450,
+    "pages": 320
+  }
+]
+```
+
 ### GET /books/1/
 ```json
 {
@@ -374,7 +417,7 @@ SELECT id, title FROM book WHERE id = 15;
 - **Render Live URL:** [https://r-manikanta-lab2.onrender.com/books/?order_by=price&order=DESC](https://r-manikanta-lab2.onrender.com/books/?order_by=price&order=DESC)
 - **Expected HTTP Status:** `200 OK`
 
-![Sorting](screenshots/03-sorting.png)
+![Sorting by Price Descending](screenshots/03-sorting.png)
 
 ### 4. Pagination (GET /books/?limit=3&offset=3)
 - **Render Live URL:** [https://r-manikanta-lab2.onrender.com/books/?limit=3&offset=3](https://r-manikanta-lab2.onrender.com/books/?limit=3&offset=3)
