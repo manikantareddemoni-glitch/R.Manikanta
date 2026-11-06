@@ -11,8 +11,8 @@
 | **Name** | Reddemoni Manikanta |
 | **Registration Number** | 252U1R1220 |
 | **Section** | CSE-2E 211 |
-| **Course** | Backend Development Fundamentals |
-| **Faculty** | Mr Yugandhar Gurjalwar |
+| **Course** | Backend Development Fundamentals · Year II Term II |
+| **Faculty** | Joel Prashanth D / Mr Yugandhar Gurjalwar |
 | **College** | Aurora Deemed-to-be-University |
 
 ---
@@ -502,7 +502,7 @@ In a monorepo containing multiple labs (`lab-01/`, `lab-02/`, `lab-03/`), Render
 | :--- | :--- |
 | **What is the difference between Path and Query parameters?** | Path parameters (`req.params`) form part of the URL path and identify a specific resource (e.g. `/books/1/`). Query parameters (`req.query`) appear after `?` in key-value pairs and filter, sort, search, or paginate a collection without altering the resource identity. |
 | **What does "Stateless" mean in REST architecture?** | Every HTTP request contains all context and credentials needed to fulfill it. The server stores no client session memory between requests, enabling horizontal scalability and seamless failover. |
-| **What is the difference between HTTP 400 and 404?** | HTTP 400 (Bad Request) indicates client data error (missing fields, negative price, invalid query parameter). HTTP 404 (Not Found) indicates a well-formed request where the target URI or ID does not exist on the server. |
+| **Which status code for bad input vs a missing record? (HTTP 400 vs 404)** | Use **HTTP 400 Bad Request** for bad input or malformed client data (missing title, non-numeric price, invalid query parameter) so the client corrects the request payload before retrying. Use **HTTP 404 Not Found** when the request is syntactically well-formed, but the target record ID (e.g. `/books/999/`) does not exist on the server. |
 | **Why cannot SQL `ORDER BY` be parameterized with `?` placeholders?** | Placeholders only bind literal data values (strings, numbers). The SQL engine does not permit binding identifiers (columns, tables) or keywords (`ASC`/`DESC`). Whitelisting allowed column names in JavaScript is required to maintain security against SQL injection. |
 | **Why do parameterized queries prevent SQL injection?** | Parameterized queries separate SQL logic from user data. The database compiles the query syntax first and treats parameter inputs strictly as literal values, rendering SQL injection code inert. |
 
