@@ -88,7 +88,7 @@ app.get("/", (req, res) => {
     registrationNumber: "252U1R1220",
     section: "CSE-2E 211",
     college: "Aurora Deemed-to-be-University",
-    faculty: "Joel Prashanth D / Mr Yugandhar Gurjalwar",
+    faculty: "Mr Yugandhar Gurjalwar",
     endpoints: {
       listBooksWithFilters: "GET /books/?search_q=&order_by=id&order=ASC&limit=10&offset=0&min_price=&max_price=",
       getSingleBook: "GET /books/:bookId/",

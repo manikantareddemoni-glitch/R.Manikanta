@@ -12,7 +12,7 @@
 | **Registration Number** | 252U1R1220 |
 | **Section** | CSE-2E 211 |
 | **Course** | Backend Development Fundamentals · Year II Term II |
-| **Faculty** | Joel Prashanth D / Mr Yugandhar Gurjalwar |
+| **Faculty** | Mr Yugandhar Gurjalwar |
 | **College** | Aurora Deemed-to-be-University |
 
 ---
