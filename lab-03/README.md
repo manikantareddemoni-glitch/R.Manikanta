@@ -130,7 +130,7 @@ The asynchronous initialization routine `initializeDBAndServer()` executes at st
 | Method | Path | Live URL | Description | Status Code |
 |:---|:---|:---|:---|:---|
 | `GET` | `/` | [Open Live Link](https://r-manikanta-unzk.onrender.com/) | API Directory, student info & system status | `200 OK` |
-| `GET` | `/books/` | [Open Live Link](https://r-manikanta-unzk.onrender.com/books/) | Retrieve books with optional query parameters | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/` | [Open Live Link](https://r-manikanta-unzk.onrender.com/books/) | Retrieve books with default pagination (limit=10) | `200 OK` / `400 Bad Request` |
 | `GET` | `/books/:bookId/` | [Open Live Link (ID 1)](https://r-manikanta-unzk.onrender.com/books/1/) | Retrieve a single book by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
 | `POST` | `/books/` | [API Endpoint](https://r-manikanta-unzk.onrender.com/books/) | Create and insert a new book record | `201 Created` / `400 Bad Request` |
 | `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-unzk.onrender.com/books/1/) | Update details of an existing book by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
@@ -143,15 +143,19 @@ The asynchronous initialization routine `initializeDBAndServer()` executes at st
 
 All query parameters are optional and have built-in default values. They can be utilized individually or combined:
 
-| Parameter | Type | Default | Allowed Values / Constraints | Description |
-|-----------|------|---------|------------------------------|-------------|
-| `search_q` | String | `""` | Any search text | Case-insensitive title search via `LIKE '%term%'` |
-| `order_by` | String | `"id"` | `id`, `title`, `author`, `price`, `pages` | Whitelisted column name to order results by |
-| `order` | String | `"ASC"` | `ASC`, `DESC` (case-insensitive) | Sort direction (ascending or descending) |
-| `limit` | Integer | `10` | Non-negative integer (`>= 0`) | Maximum number of book records to return |
-| `offset` | Integer | `0` | Non-negative integer (`>= 0`) | Number of book records to skip (for pagination) |
-| `min_price` | Number | None | Non-negative number (`>= 0`) | Lower bound price filter (`price >= min_price`) |
-| `max_price` | Number | None | Non-negative number (`>= 0`) | Upper bound price filter (`price <= max_price`) |
+| Parameter | Type | Default | Allowed Values / Constraints | Live Test URL | Description |
+|-----------|------|---------|------------------------------|---------------|-------------|
+| `search_q` | String | `""` | Any search text | [Test search_q=JavaScript](https://r-manikanta-unzk.onrender.com/books/?search_q=JavaScript) | Case-insensitive title search via `LIKE '%term%'` |
+| `order_by` | String | `"id"` | `id`, `title`, `author`, `price`, `pages` | [Test order_by=price](https://r-manikanta-unzk.onrender.com/books/?order_by=price&order=DESC) | Whitelisted column name to order results by |
+| `order` | String | `"ASC"` | `ASC`, `DESC` (case-insensitive) | [Test order=DESC](https://r-manikanta-unzk.onrender.com/books/?order_by=price&order=DESC) | Sort direction (ascending or descending) |
+| `limit` | Integer | `10` | Non-negative integer (`>= 0`) | [Test limit=3&offset=3](https://r-manikanta-unzk.onrender.com/books/?limit=3&offset=3) | Maximum number of book records to return |
+| `offset` | Integer | `0` | Non-negative integer (`>= 0`) | [Test limit=3&offset=3](https://r-manikanta-unzk.onrender.com/books/?limit=3&offset=3) | Number of book records to skip (for pagination) |
+| `min_price` | Number | None | Non-negative number (`>= 0`) | [Test min_price=400&max_price=800](https://r-manikanta-unzk.onrender.com/books/?min_price=400&max_price=800) | Lower bound price filter (`price >= min_price`) |
+| `max_price` | Number | None | Non-negative number (`>= 0`) | [Test min_price=400&max_price=800](https://r-manikanta-unzk.onrender.com/books/?min_price=400&max_price=800) | Upper bound price filter (`price <= max_price`) |
+
+### Combined Filter Example
+- **URL:** [https://r-manikanta-unzk.onrender.com/books/?search_q=the&min_price=200&max_price=900&order_by=price&order=DESC&limit=4&offset=0](https://r-manikanta-unzk.onrender.com/books/?search_q=the&min_price=200&max_price=900&order_by=price&order=DESC&limit=4&offset=0)
+- **Filters Applied:** Searches for `"the"`, filters price between `200` and `900`, sorts by `price DESC`, and limits to `4` records.
 
 ---
 
@@ -181,11 +185,31 @@ All query parameters are optional and have built-in default values. They can be 
 
 ## 📤 Expected Responses
 
-### GET /books/ (Default list: 10 books)
+### GET /books/ (Default list: 10 books out of 15)
 ```json
 [
   { "id": 1, "title": "The Pragmatic Programmer", "author": "David Thomas, Andrew Hunt", "price": 750, "pages": 352 },
   { "id": 2, "title": "Clean Code", "author": "Robert C. Martin", "price": 650, "pages": 464 }
+]
+```
+
+### GET /books/?search_q=JavaScript (2 books returned)
+```json
+[
+  {
+    "id": 5,
+    "title": "JavaScript: The Good Parts",
+    "author": "Douglas Crockford",
+    "price": 380,
+    "pages": 176
+  },
+  {
+    "id": 13,
+    "title": "Eloquent JavaScript",
+    "author": "Marijn Haverbeke",
+    "price": 499,
+    "pages": 472
+  }
 ]
 ```
 
@@ -232,7 +256,7 @@ All query parameters are optional and have built-in default values. They can be 
 ### Validation Error (400 Bad Request)
 ```json
 {
-  "message": "title is required and must be a non-empty string"
+  "message": "title is required"
 }
 ```
 
@@ -259,13 +283,13 @@ Security is maintained through two strict mechanisms:
    SQL parameter placeholders (`?`) cannot bind column identifiers or sort directions. To prevent SQL injection while permitting dynamic ordering, incoming query values are strictly validated against hardcoded JavaScript whitelist sets:
    ```javascript
    const allowedColumns = ["id", "title", "author", "price", "pages"];
-   if (!allowedColumns.includes(order_by)) {
-     return res.status(400).json({ message: "Invalid order_by column. Allowed: id, title, author, price, pages" });
+   if (!allowedColumns.includes(order_by.toLowerCase())) {
+     return res.status(400).json({ message: "Invalid order_by field. Allowed fields: id, title, author, price, pages" });
    }
 
    const allowedOrders = ["ASC", "DESC"];
    if (!allowedOrders.includes(order.toUpperCase())) {
-     return res.status(400).json({ message: "Invalid order direction. Allowed: ASC, DESC" });
+     return res.status(400).json({ message: "Invalid order value. Allowed values: ASC, DESC" });
    }
    ```
 
@@ -415,15 +439,28 @@ SELECT id, title FROM book WHERE id = 15;
 
 ## 🚀 Deployment on Render
 
-### Steps to Deploy
+### Why did `/books/?search_q=JavaScript` return all 10 books previously?
+In a monorepo containing multiple labs (`lab-01/`, `lab-02/`, `lab-03/`), Render requires specifying the **Root Directory** setting for each Web Service.
+- If Render's **Root Directory** was previously set to `lab-02`, Render was running `lab-02/server.js`.
+- In `lab-02`, `GET /books/` simply runs `SELECT * FROM book` without inspecting query parameters.
+- To execute Lab 3 with query filtering, sorting, pagination, and 15 books, Render's **Root Directory** must be set to `lab-03`.
 
-1. **Sign up** on [Render](https://render.com/) using your GitHub account.
+### Steps to Deploy / Update on Render
 
-2. **Create a New Web Service:**
-   - Click **"New +"** → **"Web Service"**
-   - Connect your GitHub repository: `R.Manikanta`
+1. **Open Render Dashboard:**
+   Go to [dashboard.render.com](https://dashboard.render.com/).
 
-3. **Configure the Service:**
+2. **Update Service Settings or Create New Web Service:**
+   - **If using existing service (`r-manikanta-unzk`):**
+     1. Click on `r-manikanta-unzk`.
+     2. Click **Settings** in the left menu.
+     3. Scroll to **Root Directory** and change it from `lab-02` to `lab-03`.
+     4. Click **Save Changes**.
+     5. Click **Manual Deploy** (top right) → **Deploy latest commit**.
+   - **If creating a new service for Lab 3:**
+     1. Click **"New +"** → **"Web Service"**.
+     2. Connect repository: `R.Manikanta`.
+     3. Fill in the configuration:
 
    | Setting | Value |
    |---------|-------|
@@ -434,12 +471,10 @@ SELECT id, title FROM book WHERE id = 15;
    | **Start Command** | `npm start` |
    | **Environment Variable** | `NODE_VERSION: 20.18.0` |
 
-4. **Deploy** and wait for the build to complete.
-
-5. **Verify by visiting the deployed Render URLs:**
+3. **Verify by visiting the deployed Render URLs:**
    - **Main Server / Student Info:** [https://r-manikanta-unzk.onrender.com/](https://r-manikanta-unzk.onrender.com/)
-   - **GET All Books:** [https://r-manikanta-unzk.onrender.com/books/](https://r-manikanta-unzk.onrender.com/books/)
-   - **GET Search Title:** [https://r-manikanta-unzk.onrender.com/books/?search_q=JavaScript](https://r-manikanta-unzk.onrender.com/books/?search_q=JavaScript)
+   - **GET All Books (Default):** [https://r-manikanta-unzk.onrender.com/books/](https://r-manikanta-unzk.onrender.com/books/)
+   - **GET Search Title (`search_q=JavaScript`):** [https://r-manikanta-unzk.onrender.com/books/?search_q=JavaScript](https://r-manikanta-unzk.onrender.com/books/?search_q=JavaScript) *(Returns only the 2 JavaScript books)*
    - **GET Sort by Price:** [https://r-manikanta-unzk.onrender.com/books/?order_by=price&order=DESC](https://r-manikanta-unzk.onrender.com/books/?order_by=price&order=DESC)
    - **GET Pagination:** [https://r-manikanta-unzk.onrender.com/books/?limit=3&offset=3](https://r-manikanta-unzk.onrender.com/books/?limit=3&offset=3)
    - **GET Price Filter:** [https://r-manikanta-unzk.onrender.com/books/?min_price=400&max_price=800](https://r-manikanta-unzk.onrender.com/books/?min_price=400&max_price=800)
