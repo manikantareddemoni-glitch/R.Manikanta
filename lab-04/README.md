@@ -1,6 +1,6 @@
 # Lab 4: Registration, login and JWT
 
-> **🔗 Live Deployment URL:** [https://r-manikanta-3.onrender.com](https://r-manikanta-3.onrender.com)
+> **🔗 Live Deployment URL:** [https://r-manikanta-4.onrender.com](https://r-manikanta-4.onrender.com)
 
 ---
 
@@ -134,14 +134,14 @@ The asynchronous initialization routine `initializeDBAndServer()` executes at st
 
 | Method | Path | Live URL | Description | Status Code |
 |:---|:---|:---|:---|:---|
-| `GET` | `/` | [Open Live Link](https://r-manikanta-3.onrender.com/) | API Directory, student info & system status | `200 OK` |
-| `POST` | `/register/` | [API Endpoint](https://r-manikanta-3.onrender.com/register/) | Register new user with bcrypt password hashing | `201 Created` / `400 Bad Request` |
-| `POST` | `/login/` | [API Endpoint](https://r-manikanta-3.onrender.com/login/) | Authenticate user & return signed JWT token | `200 OK` / `400 Bad Request` |
-| `GET` | `/books/` | [Open Live Link](https://r-manikanta-3.onrender.com/books/) | Retrieve books with default pagination (limit=10) | `200 OK` / `400 Bad Request` |
-| `GET` | `/books/:bookId/` | [Open Live Link (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Retrieve a single book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
-| `POST` | `/books/` | [API Endpoint](https://r-manikanta-3.onrender.com/books/) | Create and insert a new book record | `201 Created` / `400 Bad Request` |
-| `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Update details of an existing book by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
-| `DELETE` | `/books/:bookId/` | [API Endpoint (ID 15)](https://r-manikanta-3.onrender.com/books/15/) | Delete a book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `GET` | `/` | [Open Live Link](https://r-manikanta-4.onrender.com/) | API Directory, student info & system status | `200 OK` |
+| `POST` | `/register/` | [API Endpoint](https://r-manikanta-4.onrender.com/register/) | Register new user with bcrypt password hashing | `201 Created` / `400 Bad Request` |
+| `POST` | `/login/` | [API Endpoint](https://r-manikanta-4.onrender.com/login/) | Authenticate user & return signed JWT token | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/` | [Open Live Link](https://r-manikanta-4.onrender.com/books/) | Retrieve books with default pagination (limit=10) | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/:bookId/` | [Open Live Link (ID 1)](https://r-manikanta-4.onrender.com/books/1/) | Retrieve a single book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `POST` | `/books/` | [API Endpoint](https://r-manikanta-4.onrender.com/books/) | Create and insert a new book record | `201 Created` / `400 Bad Request` |
+| `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-4.onrender.com/books/1/) | Update details of an existing book by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `DELETE` | `/books/:bookId/` | [API Endpoint (ID 15)](https://r-manikanta-4.onrender.com/books/15/) | Delete a book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
 
 ---
 
@@ -378,7 +378,7 @@ id  username   name                  password
 ## 📸 Screenshots
 
 ### 1. Register Success (POST /register/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `201 Created`
 
 ![Register Success](screenshots/01-register-success.png)
@@ -386,7 +386,7 @@ id  username   name                  password
 ---
 
 ### 2. Register Existing Username (POST /register/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `400 Bad Request`
 
 ![Register Existing User](screenshots/02-register-existing-user.png)
@@ -394,7 +394,7 @@ id  username   name                  password
 ---
 
 ### 3. Register Validation Error - Password Too Short (POST /register/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `400 Bad Request`
 
 ![Register Validation Error](screenshots/03-register-validation-error.png)
@@ -402,7 +402,7 @@ id  username   name                  password
 ---
 
 ### 4. Login Success Returning JWT Token (POST /login/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `200 OK`
 
 ![Login Success JWT](screenshots/04-login-success-jwt.png)
@@ -410,7 +410,7 @@ id  username   name                  password
 ---
 
 ### 5. Login Unknown User (POST /login/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `400 Bad Request`
 
 ![Login Unknown User](screenshots/05-login-unknown-user.png)
@@ -418,7 +418,7 @@ id  username   name                  password
 ---
 
 ### 6. Login Wrong Password (POST /login/)
-- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `400 Bad Request`
 
 ![Login Wrong Password](screenshots/06-login-wrong-password.png)
@@ -459,7 +459,7 @@ In a monorepo containing multiple labs (`lab-01/`, `lab-02/`, `lab-03/`, `lab-04
 
    | Setting | Value |
    |---|---|
-   | **Name** | `r-manikanta-3` |
+   | **Name** | `r-manikanta-4` |
    | **Root Directory** | `lab-04` |
    | **Runtime** | `Node` |
    | **Build Command** | `npm install` |
@@ -467,10 +467,10 @@ In a monorepo containing multiple labs (`lab-01/`, `lab-02/`, `lab-03/`, `lab-04
    | **Instance Type** | `Free` |
 
 3. **Verify by visiting the deployed Render URLs:**
-   - **Main Server / Student Info:** [https://r-manikanta-3.onrender.com/](https://r-manikanta-3.onrender.com/)
-   - **GET All Books (Default):** [https://r-manikanta-3.onrender.com/books/](https://r-manikanta-3.onrender.com/books/)
-   - **POST Register Endpoint:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
-   - **POST Login Endpoint:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
+   - **Main Server / Student Info:** [https://r-manikanta-4.onrender.com/](https://r-manikanta-4.onrender.com/)
+   - **GET All Books (Default):** [https://r-manikanta-4.onrender.com/books/](https://r-manikanta-4.onrender.com/books/)
+   - **POST Register Endpoint:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
+   - **POST Login Endpoint:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 
 ---
 
