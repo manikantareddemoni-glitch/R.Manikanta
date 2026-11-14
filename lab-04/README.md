@@ -430,8 +430,8 @@ id  username   name                  password
 
 ---
 
-### 8. jwt.io Decoded Token (Header, Payload, Signature)
-![JWT IO Decoded Token](screenshots/08-jwt-io-decoded-token.png)
+### 8. JWT Token Decoding & Signature Verification in Terminal
+![JWT Token Verification and Decoding in Terminal](screenshots/08-jwt-io-decoded-token.png)
 
 ---
 
