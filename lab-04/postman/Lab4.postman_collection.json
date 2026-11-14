@@ -242,7 +242,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:3000",
+      "value": "https://r-manikanta-3.onrender.com",
       "type": "string"
     }
   ]

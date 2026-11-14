@@ -1,6 +1,6 @@
 # Lab 4: Registration, login and JWT
 
-> **🔗 Deployment Status:** Local SQLite Database Application (Cloud Persistent Disk Guide Included Below)
+> **🔗 Live Deployment URL:** [https://r-manikanta-3.onrender.com](https://r-manikanta-3.onrender.com)
 
 ---
 
@@ -105,16 +105,16 @@ Maintained to guarantee full backward compatibility for all existing `/books/` e
 
 ## 📡 API Endpoints
 
-| Method | Path | Description | Expected Status Codes |
-| :--- | :--- | :--- | :--- |
-| `GET` | `/` | API Directory, student information & service status | `200 OK` |
-| `POST` | `/register/` | Register new user with bcrypt password hashing | `201 Created` / `400 Bad Request` |
-| `POST` | `/login/` | Authenticate user & return signed JWT token | `200 OK` / `400 Bad Request` |
-| `GET` | `/books/` | List books with search, sort, and pagination | `200 OK` / `400 Bad Request` |
-| `GET` | `/books/:bookId/` | Retrieve a single book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
-| `POST` | `/books/` | Create and insert a new book record | `201 Created` / `400 Bad Request` |
-| `PUT` | `/books/:bookId/` | Update existing book details | `200 OK` / `400 Bad Request` / `404 Not Found` |
-| `DELETE` | `/books/:bookId/` | Delete book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| Method | Path | Live URL | Description | Expected Status Codes |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/` | [Open Live Link](https://r-manikanta-3.onrender.com/) | API Directory, student information & service status | `200 OK` |
+| `POST` | `/register/` | [API Endpoint](https://r-manikanta-3.onrender.com/register/) | Register new user with bcrypt password hashing | `201 Created` / `400 Bad Request` |
+| `POST` | `/login/` | [API Endpoint](https://r-manikanta-3.onrender.com/login/) | Authenticate user & return signed JWT token | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/` | [Open Live Link](https://r-manikanta-3.onrender.com/books/) | List books with search, sort, and pagination | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/:bookId/` | [Open Live Link (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Retrieve a single book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `POST` | `/books/` | [API Endpoint](https://r-manikanta-3.onrender.com/books/) | Create and insert a new book record | `201 Created` / `400 Bad Request` |
+| `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Update existing book details | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `DELETE` | `/books/:bookId/` | [API Endpoint (ID 15)](https://r-manikanta-3.onrender.com/books/15/) | Delete book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
 
 ---
 
@@ -220,7 +220,7 @@ HMACSHA256(
 ## 📸 Screenshots
 
 ### 1. Register Success (201 Created)
-- **Endpoint:** `POST /register/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
 - **Expected Status:** `201 Created`
 - **Response:** `{"message": "User created successfully"}`
 
@@ -229,7 +229,7 @@ HMACSHA256(
 ---
 
 ### 2. Register Existing Username (400 Bad Request)
-- **Endpoint:** `POST /register/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
 - **Expected Status:** `400 Bad Request`
 - **Response:** `{"message": "User already exists"}`
 
@@ -238,7 +238,7 @@ HMACSHA256(
 ---
 
 ### 3. Register Validation Error - Password Too Short (400 Bad Request)
-- **Endpoint:** `POST /register/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
 - **Expected Status:** `400 Bad Request`
 - **Response:** `{"message": "Password must be at least 6 characters long"}`
 
@@ -247,7 +247,7 @@ HMACSHA256(
 ---
 
 ### 4. Login Success Returning JWT Token (200 OK)
-- **Endpoint:** `POST /login/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
 - **Expected Status:** `200 OK`
 - **Response:** `{"jwt_token": "..."}`
 
@@ -256,7 +256,7 @@ HMACSHA256(
 ---
 
 ### 5. Login Unknown User (400 Bad Request)
-- **Endpoint:** `POST /login/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
 - **Expected Status:** `400 Bad Request`
 - **Response:** `{"message": "Invalid user"}`
 
@@ -265,7 +265,7 @@ HMACSHA256(
 ---
 
 ### 6. Login Wrong Password (400 Bad Request)
-- **Endpoint:** `POST /login/`
+- **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
 - **Expected Status:** `400 Bad Request`
 - **Response:** `{"message": "Invalid password"}`
 
