@@ -130,6 +130,19 @@ app.get("/", (req, res) => {
 // ==========================================
 // PHASE 3: USER REGISTRATION (POST /register/)
 // ==========================================
+// Informational GET handler for browsers
+app.get("/register/", (req, res) => {
+  res.status(200).json({
+    message: "Registration Endpoint. Please submit an HTTP POST request with a JSON body.",
+    method: "POST",
+    expectedRequestBody: {
+      username: "manikanta",
+      name: "Reddemoni Manikanta",
+      password: "Password@123"
+    }
+  });
+});
+
 // Request Body: { "username": "...", "name": "...", "password": "..." }
 app.post("/register/", async (req, res, next) => {
   try {
@@ -199,6 +212,18 @@ app.post("/register/", async (req, res, next) => {
 // ==========================================
 // PHASE 4: USER LOGIN (POST /login/)
 // ==========================================
+// Informational GET handler for browsers
+app.get("/login/", (req, res) => {
+  res.status(200).json({
+    message: "Login Endpoint. Please submit an HTTP POST request with a JSON body.",
+    method: "POST",
+    expectedRequestBody: {
+      username: "manikanta",
+      password: "Password@123"
+    }
+  });
+});
+
 // Request Body: { "username": "...", "password": "..." }
 app.post("/login/", async (req, res, next) => {
   try {
