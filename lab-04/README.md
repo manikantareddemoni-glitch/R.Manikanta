@@ -377,30 +377,6 @@ id  username   name                  password
 
 ## 📸 Screenshots
 
-### Live Render Endpoints (Browser Preview)
-
-> [!NOTE]
-> **Why do browser links show the same output?**  
-> In a web browser (Google Chrome), opening an endpoint URL executes an HTTP `GET` request. Because `/register/` and `/login/` are RESTful `POST` endpoints expecting specific JSON request bodies, opening them in a browser displays the server's endpoint guide. The specific test scenarios (Success 201, Duplicate User 400, Short Password 400, Login Success 200 + JWT, Invalid User 400, and Wrong Password 400) are executed by submitting the required JSON body via **Postman**. Both the live browser endpoints and the Postman test scenario results are documented below.
-
-#### Live Registration Endpoint in Chrome (GET /register/)
-- **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
-- **Expected HTTP Status:** `200 OK`
-
-![Live Registration Endpoint](screenshots/live-register-endpoint.png)
-
----
-
-#### Live Login Endpoint in Chrome (GET /login/)
-- **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
-- **Expected HTTP Status:** `200 OK`
-
-![Live Login Endpoint](screenshots/live-login-endpoint.png)
-
----
-
-### Postman Test Suite Execution (POST Scenarios)
-
 ### 1. Register Success (POST /register/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `201 Created`
