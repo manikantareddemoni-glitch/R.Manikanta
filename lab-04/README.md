@@ -7,7 +7,7 @@
 ## 📋 Student Information
 
 | Field | Details |
-| --- | --- |
+|---|---|
 | **Name** | Reddemoni Manikanta |
 | **Registration Number** | 252U1R1220 |
 | **Section** | CSE-2E 211 |
@@ -19,22 +19,24 @@
 
 ## 🎯 Objective
 
-Add secure user registration and login to the Express REST API using industry-standard **bcrypt** password hashing and **JSON Web Tokens (JWT)** for stateless authentication. Ensure passwords are never stored in plain text, enforce request body validation, utilize parameterized SQL queries to prevent SQL injection, and analyze decoded JWT tokens using `jwt.io`.
+Add secure user registration and login to the Express RESTful API with SQLite database integration. Implement industry-standard **bcrypt** password hashing with cryptographic salting (10 salt rounds) so plain text passwords are never stored, generate and sign stateless **JSON Web Tokens (JWT)** on successful login with payload containing only the username, enforce strict input validation, utilize parameterized queries (`?`) to prevent SQL injection, and verify the token structure on `jwt.io`.
 
 ---
 
 ## 🛠️ Technologies Used
 
 | Technology | Purpose |
-| --- | --- |
+|---|---|
 | **Node.js** | JavaScript runtime environment for backend execution |
-| **Express.js** | Web framework for routing and handling HTTP requests |
-| **SQLite (sqlite3 / sqlite)** | Lightweight, file-based relational database |
+| **Express.js** | Web framework for routing and handling REST API requests |
+| **SQLite** | Lightweight, file-based relational database |
+| **sqlite / sqlite3** | Asynchronous promise-based Node.js SQLite client and driver |
 | **bcrypt** | Cryptographic library for salt generation and one-way password hashing |
 | **jsonwebtoken (JWT)** | Stateless authentication token generation and verification |
-| **nodemon** | Development tool for automatic server reload on code modification |
-| **Postman** | Comprehensive API design and automated request testing suite |
-| **Git & GitHub** | Version control and source code repository |
+| **nodemon** | Development tool for automated server restarts on file modifications |
+| **Postman** | Comprehensive API design, request verification, and testing suite |
+| **Git & GitHub** | Distributed version control and remote code repository |
+| **Render** | Cloud hosting platform for live application deployment |
 
 ---
 
@@ -42,109 +44,311 @@ Add secure user registration and login to the Express REST API using industry-st
 
 **Database File:** `database.db`
 
-### 1. `user` Table (New in Lab 4)
-Stores registered user credentials. **Passwords are stored strictly as bcrypt hashes with 10 salt rounds.**
+### 1. Table: `user` (New in Lab 4)
 
-| Column | Type | Constraints | Description |
-| --- | --- | --- | --- |
-| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | Unique identifier for each registered user |
-| `username` | TEXT | UNIQUE NOT NULL | Unique login handle for the user |
-| `name` | TEXT | NOT NULL | User's full display name |
-| `password` | TEXT | NOT NULL | 60-character bcrypt one-way password hash |
+Stores registered user credentials. **Passwords are stored strictly as 60-character bcrypt hashes.**
 
-### 2. `book` Table (Retained from Lab 2 & Lab 3)
-Maintained to guarantee full backward compatibility for all existing `/books/` endpoints.
+| Column | Type | Description |
+|---|---|---|
+| `id` | INTEGER PRIMARY KEY AUTOINCREMENT | Unique identifier for each registered user |
+| `username` | TEXT UNIQUE NOT NULL | Unique login handle for authentication |
+| `name` | TEXT NOT NULL | Full name of the registered user |
+| `password` | TEXT NOT NULL | 60-character one-way bcrypt password hash |
 
-| Column | Type | Constraints | Description |
-| --- | --- | --- | --- |
-| `id` | INTEGER | PRIMARY KEY AUTOINCREMENT | Unique identifier for each book |
-| `title` | TEXT | NOT NULL | Title of the book |
-| `author` | TEXT | NOT NULL | Full author name |
-| `price` | INTEGER | NOT NULL | Price in INR |
-| `pages` | INTEGER | NOT NULL | Total page count |
+#### Sample Data (`user` table)
+
+| ID | Username | Name | Password (Stored Hash) |
+|---|---|---|---|
+| 1 | `manikanta` | Reddemoni Manikanta | `$2b$10$.ecW9MkUJte9Pyah58C1me/wiIFew1vwQLwpikEzjiMHEdEtrZENC` |
+| 2 | `rahul` | Rahul Sharma | `$2b$10$m3aop87AeaH47Q7JDhqQEes3/rFGEYG9M0OB6hOCJsfQTEKyhRlWG` |
 
 ---
 
-## ⚙️ How to Install & Run
+### 2. Table: `book` (Maintained from Lab 2 & Lab 3)
+
+Maintained to guarantee backward compatibility for all existing `/books/` endpoints.
+
+| Column | Type | Description |
+|---|---|---|
+| `id` | INTEGER PRIMARY KEY AUTOINCREMENT | Unique identifier for each book |
+| `title` | TEXT NOT NULL | Title of the book |
+| `author` | TEXT NOT NULL | Full name of the author |
+| `price` | INTEGER NOT NULL | Price in Indian Rupees (INR) |
+| `pages` | INTEGER NOT NULL | Total page count |
+
+---
+
+## 🔌 Database Initialization
+
+The asynchronous initialization routine `initializeDBAndServer()` executes at startup:
+
+1. Connects to `database.db` using the `open()` method from `sqlite` and the `sqlite3.Database` driver.
+2. Creates the `book` table using `CREATE TABLE IF NOT EXISTS` if not already present.
+3. Automatically seeds 15 realistic book records if the total record count is below 15, ensuring test data for `/books/` routes.
+4. Creates the `user` table using `CREATE TABLE IF NOT EXISTS` with `id`, `username` (UNIQUE), `name`, and `password` columns.
+5. Binds the Express server to `process.env.PORT || 3000`.
+6. Attaches an event listener to gracefully capture and report `EADDRINUSE` port conflict errors.
+
+---
+
+## ⚙️ Installation & Setup
 
 ### Prerequisites
-- **Node.js** (v18.x or v20.x LTS or higher)
-- **npm** (bundled with Node.js)
 
-### Installation Steps
+- **Node.js** (v18.x or v20.x LTS)
+- **npm** (comes bundled with Node.js)
 
-1. **Navigate to the `lab-04` directory:**
+### Steps
+
+1. **Navigate to the lab-04 directory:**
    ```bash
    cd R.Manikanta/lab-04
    ```
 
-2. **Install all dependencies:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Configure Environment Variables:**
-   Copy `.env.example` to create `.env` (never commit real secret values):
+3. **Configure Environment:**
+   Create a `.env` file from `.env.example` if a custom port is required:
    ```env
    PORT=3000
    ```
 
-4. **Start the Server:**
-   - **Production Mode:**
-     ```bash
-     npm start
-     ```
-   - **Development Mode (with auto-reload):**
-     ```bash
-     npm run dev
-     ```
+4. **Start the server (Production):**
+   ```bash
+   npm start
+   ```
 
-5. **Local Server URL:** [http://localhost:3000](http://localhost:3000)
+5. **Start with auto-reload (Development):**
+   ```bash
+   npm run dev
+   ```
+
+6. **Local Server URL:** [http://localhost:3000](http://localhost:3000)
 
 ---
 
 ## 📡 API Endpoints
 
-| Method | Path | Live URL | Description | Expected Status Codes |
-| :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/` | [Open Live Link](https://r-manikanta-3.onrender.com/) | API Directory, student information & service status | `200 OK` |
+| Method | Path | Live URL | Description | Status Code |
+|:---|:---|:---|:---|:---|
+| `GET` | `/` | [Open Live Link](https://r-manikanta-3.onrender.com/) | API Directory, student info & system status | `200 OK` |
 | `POST` | `/register/` | [API Endpoint](https://r-manikanta-3.onrender.com/register/) | Register new user with bcrypt password hashing | `201 Created` / `400 Bad Request` |
 | `POST` | `/login/` | [API Endpoint](https://r-manikanta-3.onrender.com/login/) | Authenticate user & return signed JWT token | `200 OK` / `400 Bad Request` |
-| `GET` | `/books/` | [Open Live Link](https://r-manikanta-3.onrender.com/books/) | List books with search, sort, and pagination | `200 OK` / `400 Bad Request` |
+| `GET` | `/books/` | [Open Live Link](https://r-manikanta-3.onrender.com/books/) | Retrieve books with default pagination (limit=10) | `200 OK` / `400 Bad Request` |
 | `GET` | `/books/:bookId/` | [Open Live Link (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Retrieve a single book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
 | `POST` | `/books/` | [API Endpoint](https://r-manikanta-3.onrender.com/books/) | Create and insert a new book record | `201 Created` / `400 Bad Request` |
-| `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Update existing book details | `200 OK` / `400 Bad Request` / `404 Not Found` |
-| `DELETE` | `/books/:bookId/` | [API Endpoint (ID 15)](https://r-manikanta-3.onrender.com/books/15/) | Delete book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `PUT` | `/books/:bookId/` | [API Endpoint (ID 1)](https://r-manikanta-3.onrender.com/books/1/) | Update details of an existing book by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| `DELETE` | `/books/:bookId/` | [API Endpoint (ID 15)](https://r-manikanta-3.onrender.com/books/15/) | Delete a book record by ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
 
 ---
 
-## 🧪 Postman Test Suite & Verification Results
+## 🔐 Password Security: Hashing & Salting with bcrypt
 
-A complete collection with 12 automated test cases is provided in [`postman/Lab4.postman_collection.json`](postman/Lab4.postman_collection.json).
+Password security is enforced through two non-negotiable principles:
 
-| # | Test Scenario | Method | Endpoint | Request Payload | Expected Status | Real Result |
-| :---: | :--- | :---: | :--- | :--- | :---: | :---: |
-| **1** | API Directory | `GET` | `/` | None | `200 OK` | `200 OK` ✅ |
-| **2** | Register User Success | `POST` | `/register/` | `{"username":"manikanta", "name":"Reddemoni Manikanta", "password":"Password@123"}` | `201 Created` | `201 Created` ✅ |
-| **3** | Register Duplicate User | `POST` | `/register/` | `{"username":"manikanta", "name":"Reddemoni Manikanta", "password":"Password@123"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **4** | Register Missing Fields | `POST` | `/register/` | `{"username":"incomplete_user"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **5** | Register Password < 6 Chars | `POST` | `/register/` | `{"username":"short_pwd", "name":"Short", "password":"123"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **6** | Login Success with JWT | `POST` | `/login/` | `{"username":"manikanta", "password":"Password@123"}` | `200 OK` | `200 OK` ✅ |
-| **7** | Login Unknown User | `POST` | `/login/` | `{"username":"ghost_user_999", "password":"Password@123"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **8** | Login Wrong Password | `POST` | `/login/` | `{"username":"manikanta", "password":"WrongPassword!"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **9** | Login Missing Fields | `POST` | `/login/` | `{"username":"manikanta"}` | `400 Bad Request` | `400 Bad Request` ✅ |
-| **10** | Backward Compatibility /books/ | `GET` | `/books/?limit=3` | None | `200 OK` | `200 OK` ✅ |
-| **11** | GET Single Book by ID | `GET` | `/books/1/` | None | `200 OK` | `200 OK` ✅ |
-| **12** | 404 Unknown Route | `GET` | `/unknown-route-test/` | None | `404 Not Found` | `404 Not Found` ✅ |
+1. **One-Way Cryptographic Hashing:**
+   Plaintext passwords are never stored in the database. `bcrypt.hash(password, 10)` transforms the password into a secure 60-character string that cannot be decrypted back into plain text.
+
+2. **Cryptographic Salting:**
+   `bcrypt` automatically generates a random 128-bit salt for each hash operation. Even if two users register with the identical password (e.g. `secret123`), their stored password hashes are entirely distinct. This neutralizes **Rainbow Table** pre-computation dictionary attacks.
+
+3. **Verification via `bcrypt.compare()`:**
+   During login, `bcrypt.compare(password, dbUser.password)` extracts the salt from the stored hash, hashes the candidate password using that identical salt, and verifies whether the outputs match without ever decrypting the password.
 
 ---
 
-## 🔍 SQLite CLI Verification
+## 🎫 JSON Web Tokens (JWT) Architecture & Decoding
 
-To verify directly inside the SQLite database that:
-1. Passwords are never stored in plain text.
-2. Usernames are uniquely enforced.
-3. Identical plaintext passwords for different users produce **distinct hashes** due to bcrypt salt generation:
+A JSON Web Token consists of three base64url-encoded components separated by dots (`.`):
+
+$$\text{JWT} = \text{Header} \,.\, \text{Payload} \,.\, \text{Signature}$$
+
+### Real Token Generated by Server:
+```text
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmlrYW50YSIsImlhdCI6MTc5NDU2NTc5MCwiZXhwIjoxNzk0NTY5MzkwfQ.CxZR9lzdaoqqYoznm9tnNqKCwaZNc2F9VazkdN3QM9k
+```
+
+1. **Header (Red):** Specifies the signing algorithm and token type:
+   ```json
+   {
+     "alg": "HS256",
+     "typ": "JWT"
+   }
+   ```
+
+2. **Payload (Purple):** Stores identity claims. **Contains strictly the username and timestamp metadata. Passwords, hashes, and secrets are never placed in the payload:**
+   ```json
+   {
+     "username": "manikanta",
+     "iat": 1794565790,
+     "exp": 1794569390
+   }
+   ```
+
+3. **Signature (Cyan):** Created using HMAC SHA-256 with the server secret key:
+   ```text
+   HMACSHA256(
+     base64UrlEncode(header) + "." + base64UrlEncode(payload),
+     secret_key_manikanta_lab4_auth
+   )
+   ```
+
+### Verification on jwt.io:
+1. Open [https://jwt.io](https://jwt.io) in a web browser.
+2. Paste the token from `POST /login/` into the **Encoded** box.
+3. Observe the decoded Header (`HS256`) and Payload (`{"username": "manikanta"}`).
+4. Under **Verify Signature**, enter `secret_key_manikanta_lab4_auth` to confirm **Signature Verified**.
+
+---
+
+## 📝 Sample Request Bodies
+
+### POST /register/ (Register New User)
+```json
+{
+  "username": "manikanta",
+  "name": "Reddemoni Manikanta",
+  "password": "Password@123"
+}
+```
+
+### POST /login/ (User Login)
+```json
+{
+  "username": "manikanta",
+  "password": "Password@123"
+}
+```
+
+### POST /books/ (Add a new book)
+```json
+{
+  "title": "System Design Interview",
+  "author": "Alex Xu",
+  "price": 850,
+  "pages": 300
+}
+```
+
+---
+
+## 📤 Expected Responses
+
+### POST /register/ (201 Created)
+```json
+{
+  "message": "User created successfully"
+}
+```
+
+### POST /register/ (400 Bad Request - User Already Exists)
+```json
+{
+  "message": "User already exists"
+}
+```
+
+### POST /register/ (400 Bad Request - Password Too Short)
+```json
+{
+  "message": "Password must be at least 6 characters long"
+}
+```
+
+### POST /login/ (200 OK + jwt_token)
+```json
+{
+  "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmlrYW50YSIsImlhdCI6MTc5NDU2NTc5MCwiZXhwIjoxNzk0NTY5MzkwfQ.CxZR9lzdaoqqYoznm9tnNqKCwaZNc2F9VazkdN3QM9k"
+}
+```
+
+### POST /login/ (400 Bad Request - Invalid User)
+```json
+{
+  "message": "Invalid user"
+}
+```
+
+### POST /login/ (400 Bad Request - Invalid Password)
+```json
+{
+  "message": "Invalid password"
+}
+```
+
+### GET / (API Directory & Student Profile)
+```json
+{
+  "message": "Welcome to Backend Development Fundamentals - Lab 4 (Registration, Login and JWT)",
+  "student": "Reddemoni Manikanta",
+  "registrationNumber": "252U1R1220",
+  "section": "CSE-2E 211",
+  "college": "Aurora Deemed-to-be-University",
+  "faculty": "Mr Yugandhar Gurjalwar",
+  "endpoints": {
+    "register": "POST /register/",
+    "login": "POST /login/",
+    "listBooksWithFilters": "GET /books/?search_q=&order_by=id&order=ASC&limit=10&offset=0&min_price=&max_price=",
+    "getSingleBook": "GET /books/:bookId/",
+    "addBook": "POST /books/",
+    "updateBook": "PUT /books/:bookId/",
+    "deleteBook": "DELETE /books/:bookId/"
+  }
+}
+```
+
+### Resource / Route Not Found (404 Not Found)
+```json
+{
+  "message": "Route not found"
+}
+```
+
+---
+
+## 🛡️ SQL Injection Prevention & Whitelisting
+
+Security is maintained through two strict mechanisms:
+
+1. **Parameterized Queries (`?`):**
+   Used for all dynamic user inputs (registration, login lookups, search strings, and book IDs). The database engine compiles SQL statements prior to binding values, treating user input strictly as literal values rather than executable code:
+   ```sql
+   SELECT * FROM user WHERE username = ?;
+   INSERT INTO user (username, name, password) VALUES (?, ?, ?);
+   ```
+
+2. **JavaScript Whitelisting for `ORDER BY`:**
+   SQL parameter placeholders (`?`) cannot bind column identifiers or sort directions. In the maintained `/books/` endpoint, incoming query values are strictly validated against hardcoded JavaScript whitelist sets (`["id", "title", "author", "price", "pages"]` and `["ASC", "DESC"]`).
+
+---
+
+## 🧪 Postman Test Suite Verification
+
+A comprehensive collection of 12 test cases was executed against the API. The collection is located at [`postman/Lab4.postman_collection.json`](postman/Lab4.postman_collection.json).
+
+| # | Test Scenario | Method | Endpoint / Parameters | Expected Status | Status Result |
+|:---:|---|:---:|---|:---:|:---:|
+| 1 | API Directory & Student Info | `GET` | `/` | `200 OK` | `200 OK` |
+| 2 | Register User Success | `POST` | `/register/` | `201 Created` | `201 Created` |
+| 3 | Register Duplicate User | `POST` | `/register/` | `400 Bad Request` | `400 Bad Request` |
+| 4 | Register Missing Fields | `POST` | `/register/` | `400 Bad Request` | `400 Bad Request` |
+| 5 | Register Password < 6 Chars | `POST` | `/register/` | `400 Bad Request` | `400 Bad Request` |
+| 6 | Login Success with JWT | `POST` | `/login/` | `200 OK` | `200 OK` |
+| 7 | Login Unknown User | `POST` | `/login/` | `400 Bad Request` | `400 Bad Request` |
+| 8 | Login Wrong Password | `POST` | `/login/` | `400 Bad Request` | `400 Bad Request` |
+| 9 | Login Missing Fields | `POST` | `/login/` | `400 Bad Request` | `400 Bad Request` |
+| 10 | Backward Compatibility: GET Books | `GET` | `/books/?limit=3` | `200 OK` | `200 OK` |
+| 11 | GET Single Book by ID | `GET` | `/books/1/` | `200 OK` | `200 OK` |
+| 12 | Route Not Found: Unknown Route | `GET` | `/unknown-route-test/` | `404 Not Found` | `404 Not Found` |
+
+---
+
+## 🧪 SQLite CLI Verification
+
+To verify database operations directly at the database level:
 
 ```bash
 sqlite3 database.db
@@ -154,7 +358,7 @@ sqlite3 database.db
 .headers on
 .mode column
 
--- Inspect all registered user records:
+-- View all registered users (showing hashes only):
 SELECT id, username, name, password FROM user;
 ```
 
@@ -166,211 +370,147 @@ id  username   name                  password
 2   rahul      Rahul Sharma          $2b$10$m3aop87AeaH47Q7JDhqQEes3/rFGEYG9M0OB6hOCJsfQTEKyhRlWG
 ```
 
-> [!IMPORTANT]
-> Both `manikanta` and `rahul` were registered with the exact same plaintext password (`secret123`), but because `bcrypt` automatically generates a random cryptographic salt for each call, the stored password hashes are completely different.
-
----
-
-## 🔐 JWT Structure & Decoding at jwt.io
-
-A JSON Web Token consists of three base64url-encoded parts separated by dots (`.`):
-$$\text{JWT} = \text{Header} \,.\, \text{Payload} \,.\, \text{Signature}$$
-
-### Real Token Generated by Server:
-```text
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmlrYW50YSIsImlhdCI6MTc5NDU2NTc5MCwiZXhwIjoxNzk0NTY5MzkwfQ.CxZR9lzdaoqqYoznm9tnNqKCwaZNc2F9VazkdN3QM9k
-```
-
-### 1. Header (Red)
-Specifies the cryptographic signing algorithm and token type:
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
-```
-
-### 2. Payload (Purple)
-Contains user identity claims. **Only the username and timestamp claims (`iat`, `exp`) are present. Passwords, hashes, and database secrets are never included.**
-```json
-{
-  "username": "manikanta",
-  "iat": 1794565790,
-  "exp": 1794569390
-}
-```
-
-### 3. Signature (Cyan)
-Created by taking the base64url-encoded header and payload, hashing them with the HMAC SHA-256 algorithm and the server secret key:
-```text
-HMACSHA256(
-  base64UrlEncode(header) + "." + base64UrlEncode(payload),
-  secret_key_manikanta_lab4_auth
-)
-```
-
-### How to Verify at jwt.io:
-1. Open [https://jwt.io](https://jwt.io) in your browser.
-2. Paste the token from `POST /login/` into the **Encoded** box on the left.
-3. Observe the right-hand **Decoded** pane automatically parse the Header (`HS256`) and Payload (`{"username": "manikanta"}`).
-4. Under **Verify Signature**, enter `secret_key_manikanta_lab4_auth` into the secret input to see **Signature Verified**.
+> [!NOTE]
+> Both users `manikanta` and `rahul` registered with the exact same password (`secret123`), but because `bcrypt` creates a random 128-bit salt for each hashing call, their stored hashes are completely different.
 
 ---
 
 ## 📸 Screenshots
 
-### 1. Register Success (201 Created)
+### 1. Register Success (POST /register/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
-- **Expected Status:** `201 Created`
-- **Response:** `{"message": "User created successfully"}`
+- **Expected HTTP Status:** `201 Created`
 
 ![Register Success](screenshots/01-register-success.png)
 
 ---
 
-### 2. Register Existing Username (400 Bad Request)
+### 2. Register Existing Username (POST /register/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
-- **Expected Status:** `400 Bad Request`
-- **Response:** `{"message": "User already exists"}`
+- **Expected HTTP Status:** `400 Bad Request`
 
 ![Register Existing User](screenshots/02-register-existing-user.png)
 
 ---
 
-### 3. Register Validation Error - Password Too Short (400 Bad Request)
+### 3. Register Validation Error - Password Too Short (POST /register/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
-- **Expected Status:** `400 Bad Request`
-- **Response:** `{"message": "Password must be at least 6 characters long"}`
+- **Expected HTTP Status:** `400 Bad Request`
 
 ![Register Validation Error](screenshots/03-register-validation-error.png)
 
 ---
 
-### 4. Login Success Returning JWT Token (200 OK)
+### 4. Login Success Returning JWT Token (POST /login/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
-- **Expected Status:** `200 OK`
-- **Response:** `{"jwt_token": "..."}`
+- **Expected HTTP Status:** `200 OK`
 
 ![Login Success JWT](screenshots/04-login-success-jwt.png)
 
 ---
 
-### 5. Login Unknown User (400 Bad Request)
+### 5. Login Unknown User (POST /login/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
-- **Expected Status:** `400 Bad Request`
-- **Response:** `{"message": "Invalid user"}`
+- **Expected HTTP Status:** `400 Bad Request`
 
 ![Login Unknown User](screenshots/05-login-unknown-user.png)
 
 ---
 
-### 6. Login Wrong Password (400 Bad Request)
+### 6. Login Wrong Password (POST /login/)
 - **Render Live URL:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
-- **Expected Status:** `400 Bad Request`
-- **Response:** `{"message": "Invalid password"}`
+- **Expected HTTP Status:** `400 Bad Request`
 
 ![Login Wrong Password](screenshots/06-login-wrong-password.png)
 
 ---
 
 ### 7. SQLite CLI Showing Hashed Passwords & Salting
-- **Verification:** `SELECT id, username, name, password FROM user;`
-- Proves no plain text passwords exist; identical passwords yield distinct hashes.
-
 ![SQLite CLI Users Hashed](screenshots/07-sqlite-cli-users-hashed.png)
 
 ---
 
 ### 8. jwt.io Decoded Token (Header, Payload, Signature)
-- **Verification:** Token pasted into jwt.io debugger showing decoded JSON claims and signature verification.
-
 ![JWT IO Decoded Token](screenshots/08-jwt-io-decoded-token.png)
 
 ---
 
 ### 9. Terminal Showing Server Running
-- **Command:** `npm start`
-- Proves startup, database initialization, and port binding without error.
-
 ![Terminal Server Running](screenshots/09-terminal-server-running.png)
 
 ---
 
-## 💡 Notes: Problems Faced and How They Were Solved
+## 🚀 Deployment on Render
 
-1. **Storing Passwords Securely vs Plain Text Risk:**
-   - *Problem:* Storing passwords as raw text in the database exposes all user accounts if the database file is compromised.
-   - *Solution:* Implemented `bcrypt.hash(password, 10)`. The `10` salt rounds ensure computational security against brute force attacks.
+### Why did Render need the Root Directory set to `lab-04`?
+In a monorepo containing multiple labs (`lab-01/`, `lab-02/`, `lab-03/`, `lab-04/`), Render requires specifying the **Root Directory** setting for each Web Service.
+- If Render's **Root Directory** was set to `lab-03`, Render would execute `lab-03/server.js` without the `/register/` and `/login/` authentication routes.
+- Setting Render's **Root Directory** to `lab-04` ensures Render installs dependencies (`bcrypt`, `jsonwebtoken`) from `lab-04/package.json` and runs `lab-04/server.js`.
 
-2. **Rainbow Table Attacks on Identical Passwords:**
-   - *Problem:* If two users choose the same password (e.g. `secret123`), simple cryptographic hashes (like SHA-256) would produce identical hash strings, allowing attackers to pre-compute hash dictionaries (rainbow tables).
-   - *Solution:* `bcrypt` automatically generates a random 128-bit salt and prepends it to the resulting hash. As proved in our SQLite CLI verification, identical passwords produce completely different hash strings.
+### Steps to Deploy on Render
 
-3. **Preventing SQL Injection in Authentication:**
-   - *Problem:* Malicious strings like `' OR '1'='1` in the username input can bypass login if concatenated directly into SQL queries.
-   - *Solution:* Enforced parameterized queries (`SELECT * FROM user WHERE username = ?`) for all user input lookups. The database engine treats the input strictly as literal string values.
+1. **Open Render Dashboard:**
+   Go to [dashboard.render.com](https://dashboard.render.com/).
 
-4. **Secret Key Placement in Lab 4:**
-   - *Problem:* The curriculum requires the JWT secret key to be placed in a top-level constant in Lab 4, before moving it to `.env` in Lab 8.
-   - *Solution:* Declared `const JWT_SECRET = "secret_key_manikanta_lab4_auth"` at the top of `server.js` with clear documentation notes indicating that production secrets belong in `.env`.
+2. **Create New Web Service:**
+   1. Click **"New +"** → **"Web Service"**.
+   2. Connect repository: `manikantareddemoni-glitch/R.Manikanta`.
+   3. Configure settings:
 
-5. **Cloud Deployment & SQLite Persistence:**
-   - *Problem:* Free cloud hosting tiers (such as Render Free Tier) use ephemeral container filesystems. When the service goes idle and spins down, newly registered users stored in `database.db` are lost.
-   - *Solution:* Documented the requirement for persistent storage (Render Persistent Disk, NxtWave Cloud IDE, or Docker volume mounts) and ensured comprehensive Postman and SQLite CLI test verification is preserved in the repository.
+   | Setting | Value |
+   |---|---|
+   | **Name** | `r-manikanta-3` |
+   | **Root Directory** | `lab-04` |
+   | **Runtime** | `Node` |
+   | **Build Command** | `npm install` |
+   | **Start Command** | `npm start` |
+   | **Instance Type** | `Free` |
+
+3. **Verify by visiting the deployed Render URLs:**
+   - **Main Server / Student Info:** [https://r-manikanta-3.onrender.com/](https://r-manikanta-3.onrender.com/)
+   - **GET All Books (Default):** [https://r-manikanta-3.onrender.com/books/](https://r-manikanta-3.onrender.com/books/)
+   - **POST Register Endpoint:** [https://r-manikanta-3.onrender.com/register/](https://r-manikanta-3.onrender.com/register/)
+   - **POST Login Endpoint:** [https://r-manikanta-3.onrender.com/login/](https://r-manikanta-3.onrender.com/login/)
 
 ---
 
-## 🎓 Viva Questions & Answers (Be Ready to Answer)
+## ❗ Problems Faced and Solutions
 
-### Q1: Why use `POST` instead of `GET` for the login endpoint?
-**Answer:**
-1. **Security & URL Visibility:** `GET` request parameters are transmitted inside the query string in the URL (e.g. `/login?username=user&password=123`). This URL is recorded in plain text in browser histories, proxy logs, server access logs, and network monitoring tools. `POST` sends credentials inside the HTTP request body.
-2. **Payload Size & Semantics:** `POST` is designed for submitting sensitive data and initiating state changes or session token issuance. `GET` is idempotent and safe, intended solely for retrieving resources without side effects.
+| Problem | Solution |
+|---|---|
+| **Plaintext Password Exposure Risk** | Implemented `bcrypt.hash(password, 10)` so plaintext passwords are never stored in the database or logged in server output. |
+| **Rainbow Table Precomputed Hash Vulnerability** | Relied on `bcrypt`'s automated 128-bit cryptographic salt generation, ensuring identical passwords yield completely distinct hash strings. |
+| **SQL Injection in Authentication Queries** | Enforced parameterized queries (`SELECT * FROM user WHERE username = ?`) so user inputs are treated exclusively as literal values. |
+| **Sensitive Data Exposure in JWT Payload** | Kept the JWT payload strictly limited to `{ username }`. Passwords, hashes, and secrets are never included because JWT payloads are only base64url-encoded, not encrypted. |
+| **Cloud Deployment Monorepo Routing** | Set Render's **Root Directory** explicitly to `lab-04` so Render resolves dependencies and runs the authentication server correctly. |
 
-### Q2: What is the difference between Hashing and Encryption?
-**Answer:**
-- **Hashing (One-Way):** Converts plaintext into a fixed-length string using a one-way mathematical function. It cannot be decrypted back into the original plaintext. Verification is performed by hashing the input again and comparing the two hashes (`bcrypt.compare`). Ideal for password storage.
-- **Encryption (Two-Way):** Transforms plaintext into ciphertext using an encryption key and an algorithm (e.g. AES). The ciphertext **can** be decrypted back to plaintext using the corresponding decryption key. Ideal for confidential data in transit or encrypted backups.
+---
 
-### Q3: What does `jwt.sign()` need?
-**Answer:**
-`jwt.sign(payload, secretOrPrivateKey, [options, callback])` requires three primary arguments:
-1. **Payload:** A plain JavaScript object holding the identity claims (e.g. `{ username: "manikanta" }`).
-2. **Secret Key:** A cryptographic key string used by HMAC SHA-256 to sign the token and guarantee that it cannot be forged.
-3. **Options:** An optional configuration object, typically `{ expiresIn: "1h" }` to set an automatic expiration lifespan.
+## 🎓 Viva Questions & Answers
 
-### Q4: What should NEVER go into a JWT payload?
-**Answer:**
-**Sensitive, confidential, or secret data** should never be placed in a JWT payload:
-- Plaintext passwords or bcrypt password hashes.
-- Credit card numbers, bank details, or Social Security numbers.
-- Secret API keys or database connection strings.
+| Question | Answer |
+| :--- | :--- |
+| **Why use `POST` instead of `GET` for the login endpoint?** | `GET` appends credentials to the URL query string, where they are recorded in plain text in browser histories, proxy logs, and server access logs. `POST` transmits credentials securely within the HTTP request body. |
+| **What is the difference between Hashing and Encryption?** | **Hashing (One-way):** Converts plaintext into a fixed-length string using a one-way mathematical function. It cannot be decrypted back into plain text. Ideal for passwords (`bcrypt`). **Encryption (Two-way):** Transforms plaintext into ciphertext using an encryption key. It **can** be decrypted back to plaintext with the corresponding key. Ideal for confidential data in transit. |
+| **What does `jwt.sign()` need?** | `jwt.sign(payload, secretOrPrivateKey, [options])` requires three primary arguments: **1. Payload:** Plain JS object holding identity claims (`{ username }`). **2. Secret Key:** Cryptographic string used by HMAC SHA-256 to sign the token. **3. Options:** Configuration such as `{ expiresIn: "1h" }`. |
+| **What should NEVER go into a JWT payload?** | **Sensitive, confidential data** (plaintext passwords, password hashes, credit card numbers, or secret keys). The JWT payload is only **base64url-encoded, NOT encrypted**, meaning anyone with the token can decode and read all claims inside. |
+| **What is salting and why does bcrypt use it?** | **Salting** is the addition of unique, cryptographically random data (a salt) to the plaintext password before hashing. `bcrypt` uses salting to prevent **Rainbow Table attacks** (precomputed hash lookups). Two users with the exact same password will always have completely different hashes. |
+| **What is Stateless Authentication?** | In stateless authentication (JWT), the server does not store session records in server memory or a database session table. All necessary user identity claims are signed inside the JWT token. The server authenticates subsequent requests simply by verifying the token's cryptographic signature, enabling easy horizontal scaling. |
 
-*Why?* The JWT payload is only **base64url-encoded**, **NOT encrypted**. Anyone with access to the token can paste it into `jwt.io` or run `Buffer.from(payload, 'base64')` to inspect every claim inside the payload in plain text.
+---
 
-### Q5: What is salting and why does bcrypt use it?
-**Answer:**
-- **Salting** is the addition of unique, cryptographically random data (a "salt") to the plaintext password before it is hashed.
-- `bcrypt` uses salting to prevent **Rainbow Table attacks** (precomputed tables of common password hashes). Because every user's password receives a distinct random salt, two users with the exact same password (e.g. `Password123`) will always have completely different hashes in the database.
+## ✅ Conclusion
 
-### Q6: How does `bcrypt.compare()` verify a password without knowing the original plaintext?
-**Answer:**
-A bcrypt hash string contains the algorithm version, cost factor (salt rounds), the salt itself, and the final hashed output combined (e.g. `$2b$10$SALT...HASH...`).
-When `bcrypt.compare(password, dbHash)` runs:
-1. It extracts the original salt and cost factor directly from the stored `dbHash`.
-2. It hashes the candidate plaintext password using that **exact same salt**.
-3. It performs a constant-time comparison between the new hash and the stored hash. If they match, the password is correct!
+In this lab, I learned:
 
-### Q7: What is stateless authentication?
-**Answer:**
-In stateless authentication (JWT), the server does not save session records in memory or a session table in the database. Instead, all necessary user information is encoded into the signed JWT token sent to the client. On subsequent requests, the server simply verifies the digital signature of the token to authenticate the user, allowing backend APIs to scale horizontally without shared session stores.
+1. **How to implement secure user registration** using `bcrypt` password hashing with 10 salt rounds to ensure zero plaintext password storage.
+2. **How to authenticate users and generate stateless JWT tokens** using `jsonwebtoken` with appropriate payload claims and expiration lifespan.
+3. **How to analyze token structure** by decoding Header, Payload, and Signature components at `jwt.io`.
+4. **How to protect authentication routes against SQL injection** using parameterized SQL queries with `?` placeholders.
+5. **How to deploy an authentication REST API to Render** by configuring monorepo Root Directory settings and verifying endpoints against a live cloud service.
 
 ---
 
 ## 👤 Author
 
-**Reddemoni Manikanta**  
-B.Tech CSE – Aurora Deemed-to-be-University  
-Registration Number: `252U1R1220`  
-Section: `CSE-2E 211`
-
+**Reddemoni Manikanta** – 252U1R1220 – CSE-2E 211
