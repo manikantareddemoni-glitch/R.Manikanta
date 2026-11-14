@@ -126,7 +126,7 @@ The asynchronous initialization routine `initializeDBAndServer()` executes at st
    npm run dev
    ```
 
-6. **Local Server URL:** [http://localhost:3000](http://localhost:3000)
+6. **Live Server URL:** [https://r-manikanta-4.onrender.com](https://r-manikanta-4.onrender.com)
 
 ---
 
