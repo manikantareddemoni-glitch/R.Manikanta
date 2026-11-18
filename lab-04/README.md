@@ -372,6 +372,16 @@ select * from user;
 
 ## 📸 Screenshots
 
+> All API endpoints verified in Postman against the live Render deployment ([https://r-manikanta-4.onrender.com](https://r-manikanta-4.onrender.com)), and database state verified in the SQLite CLI.
+
+### 0. API Directory & Student Info (GET /)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/](https://r-manikanta-4.onrender.com/)
+- **Expected HTTP Status:** `200 OK`
+
+![API Directory](screenshots/00-root-api-directory.png)
+
+---
+
 ### 1. Register Success (POST /register/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `201 Created`
