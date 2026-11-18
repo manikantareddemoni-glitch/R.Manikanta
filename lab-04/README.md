@@ -447,7 +447,7 @@ select * from user;
 ---
 
 ### 10. Books - GET /books/ (GET /books/)
-- **Render Live URL:** [https://r-manikanta-4.onrender.com/books/?limit=3](https://r-manikanta-4.onrender.com/books/?limit=3)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/books/?limit=3&offset=0](https://r-manikanta-4.onrender.com/books/?limit=3&offset=0)
 - **Expected HTTP Status:** `200 OK`
 
 ![10. Books - GET /books/](screenshots/10-books-get-all.png)
