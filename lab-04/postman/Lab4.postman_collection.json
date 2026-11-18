@@ -21,7 +21,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "02. Register - Success (201 Created)",
@@ -35,7 +48,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"secret123\"\n}"
+          "raw": "{\n  \"username\": \"student_{{$timestamp}}\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"secret123\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/register/",
@@ -48,7 +61,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "03. Register - Error: User Already Exists (400 Bad Request)",
@@ -75,7 +101,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Duplicate User)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "04. Register - Error: Missing Required Fields (400 Bad Request)",
@@ -102,7 +141,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Missing Fields)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "05. Register - Error: Password Too Short (400 Bad Request)",
@@ -129,7 +181,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Password Too Short)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "06. Login - Success (200 OK + jwt_token)",
@@ -156,7 +221,22 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK with jwt_token\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('jwt_token');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "07. Login - Error: Invalid User (400 Bad Request)",
@@ -183,7 +263,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Unknown User)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "08. Login - Error: Invalid Password (400 Bad Request)",
@@ -210,7 +303,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Wrong Password)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "09. Login - Error: Missing Password (400 Bad Request)",
@@ -237,7 +343,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request (Missing Password)\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "10. Books - GET /books/ (200 OK)",
@@ -265,7 +384,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK (List Books)\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "11. Books - GET /books/:bookId/ (200 OK)",
@@ -284,7 +416,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK (Get Book by ID)\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
       "name": "12. 404 Route Not Found",
@@ -302,7 +447,20 @@
           ]
         }
       },
-      "response": []
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404 Not Found\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     }
   ],
   "variable": [
