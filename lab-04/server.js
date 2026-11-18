@@ -9,22 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const dbPath = path.join(__dirname, "database.db");
 
-// ==========================================
-// JWT SECRET KEY
-// ==========================================
-// NOTE: Kept in a constant for development in Lab 4.
-// This will be moved to environment variables (.env) in Lab 8.
-// In production, real secret keys must NEVER be committed to version control.
 const JWT_SECRET = "secret_key_manikanta_lab4_auth";
 
-// Middleware to parse incoming JSON request bodies
 app.use(express.json());
 
 let db = null;
 
-// ==========================================
-// DATABASE INITIALIZATION & SERVER STARTUP
-// ==========================================
 const initializeDBAndServer = async () => {
   try {
     db = await open({
@@ -32,7 +22,6 @@ const initializeDBAndServer = async () => {
       driver: sqlite3.Database,
     });
 
-    // 1. Create the 'book' table if it does not exist (from Lab 2 & Lab 3)
     await db.exec(`
       CREATE TABLE IF NOT EXISTS book (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,11 +32,6 @@ const initializeDBAndServer = async () => {
       )
     `);
 
-    // 2. Create the 'user' table if it does not exist (Lab 4 Authentication)
-    // - id: Auto-incrementing unique identifier
-    // - username: Unique username for login
-    // - name: Full name of the user
-    // - password: Stores ONLY the bcrypt hash (never plain text)
     await db.exec(`
       CREATE TABLE IF NOT EXISTS user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,7 +41,6 @@ const initializeDBAndServer = async () => {
       )
     `);
 
-    // Ensure database contains at least 15 varied book records for testing
     const count = await db.get("SELECT COUNT(*) as total FROM book");
     if (count.total < 15) {
       await db.exec(`DELETE FROM book`);
@@ -86,7 +69,6 @@ const initializeDBAndServer = async () => {
       console.log(`Server is running at http://localhost:${PORT}`);
     });
 
-    // Friendly error handling for port conflicts (EADDRINUSE)
     server.on("error", (error) => {
       if (error.code === "EADDRINUSE") {
         console.error(
@@ -104,9 +86,6 @@ const initializeDBAndServer = async () => {
 
 initializeDBAndServer();
 
-// ==========================================
-// ROOT ROUTE - API DIRECTORY & STUDENT INFO
-// ==========================================
 app.get("/", (req, res) => {
   res.status(200).json({
     message: "Welcome to Backend Development Fundamentals - Lab 4 (Registration, Login and JWT)",
@@ -127,10 +106,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// ==========================================
-// PHASE 3: USER REGISTRATION (POST /register/)
-// ==========================================
-// Informational GET handler for browsers
 app.get("/register/", (req, res) => {
   res.status(200).json({
     message: "Registration Endpoint. Please submit an HTTP POST request with a JSON body.",
@@ -143,12 +118,10 @@ app.get("/register/", (req, res) => {
   });
 });
 
-// Request Body: { "username": "...", "name": "...", "password": "..." }
 app.post("/register/", async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
-    // 1. Validate that username, name and password are provided and non-empty
     if (
       !username ||
       !name ||
@@ -171,14 +144,12 @@ app.post("/register/", async (req, res, next) => {
       });
     }
 
-    // 2. Enforce minimum password length (at least 6 characters)
     if (password.length < 6) {
       return res.status(400).json({
         message: "Password must be at least 6 characters long",
       });
     }
 
-    // 3. Check whether the username already exists using a parameterized query
     const checkUserQuery = "SELECT * FROM user WHERE username = ?";
     const existingUser = await db.get(checkUserQuery, [trimmedUsername]);
 
@@ -188,19 +159,15 @@ app.post("/register/", async (req, res, next) => {
       });
     }
 
-    // 4. Hash the password with bcrypt (salt rounds = 10)
-    // Salting adds random data before hashing so duplicate passwords yield distinct hashes
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // 5. Insert new user using parameterized query (? placeholders)
     const insertUserQuery = `
       INSERT INTO user (username, name, password)
       VALUES (?, ?, ?)
     `;
     await db.run(insertUserQuery, [trimmedUsername, trimmedName, hashedPassword]);
 
-    // Return 201 Created (never log or return the password or hash)
     res.status(201).json({
       message: "User created successfully",
     });
@@ -209,10 +176,6 @@ app.post("/register/", async (req, res, next) => {
   }
 });
 
-// ==========================================
-// PHASE 4: USER LOGIN (POST /login/)
-// ==========================================
-// Informational GET handler for browsers
 app.get("/login/", (req, res) => {
   res.status(200).json({
     message: "Login Endpoint. Please submit an HTTP POST request with a JSON body.",
@@ -224,12 +187,10 @@ app.get("/login/", (req, res) => {
   });
 });
 
-// Request Body: { "username": "...", "password": "..." }
 app.post("/login/", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
-    // 1. Validate input presence
     if (
       !username ||
       !password ||
@@ -248,7 +209,6 @@ app.post("/login/", async (req, res, next) => {
       });
     }
 
-    // 2. Check if user exists using parameterized query
     const selectUserQuery = "SELECT * FROM user WHERE username = ?";
     const dbUser = await db.get(selectUserQuery, [trimmedUsername]);
 
@@ -258,7 +218,6 @@ app.post("/login/", async (req, res, next) => {
       });
     }
 
-    // 3. Compare plaintext password with stored bcrypt hash
     const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
 
     if (!isPasswordMatched) {
@@ -267,15 +226,9 @@ app.post("/login/", async (req, res, next) => {
       });
     }
 
-    // 4. Generate JWT Token using jwt.sign()
-    // jwt.sign needs:
-    //   a. payload: plain JS object containing user identity (ONLY username, NEVER passwords or hashes)
-    //   b. secretKey: string used by HMAC SHA256 to sign and verify token authenticity
-    //   c. options: configuration object such as expiration time { expiresIn: "1h" }
     const payload = { username: dbUser.username };
     const jwtToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
-    // Return 200 OK with jwt_token
     res.status(200).json({
       jwt_token: jwtToken,
     });
@@ -284,11 +237,6 @@ app.post("/login/", async (req, res, next) => {
   }
 });
 
-// ==========================================
-// EXISTING LAB 3 /books/ ROUTES (MAINTAINED)
-// ==========================================
-
-// Helper: Validate book body for POST & PUT
 const validateBookBody = (body) => {
   const { title, author, price, pages } = body;
 
@@ -313,7 +261,6 @@ const validateBookBody = (body) => {
   return null;
 };
 
-// 1. GET /books/ - List books with Query Parameters
 app.get("/books/", async (req, res, next) => {
   try {
     const {
@@ -410,7 +357,6 @@ app.get("/books/", async (req, res, next) => {
   }
 });
 
-// 2. GET /books/:bookId/ - Retrieve a single book
 app.get("/books/:bookId/", async (req, res, next) => {
   try {
     const { bookId } = req.params;
@@ -435,7 +381,6 @@ app.get("/books/:bookId/", async (req, res, next) => {
   }
 });
 
-// 3. POST /books/ - Create a book
 app.post("/books/", async (req, res, next) => {
   try {
     const validationError = validateBookBody(req.body);
@@ -459,7 +404,6 @@ app.post("/books/", async (req, res, next) => {
   }
 });
 
-// 4. PUT /books/:bookId/ - Update a book
 app.put("/books/:bookId/", async (req, res, next) => {
   try {
     const { bookId } = req.params;
@@ -493,7 +437,6 @@ app.put("/books/:bookId/", async (req, res, next) => {
   }
 });
 
-// 5. DELETE /books/:bookId/ - Delete a book
 app.delete("/books/:bookId/", async (req, res, next) => {
   try {
     const { bookId } = req.params;
@@ -521,18 +464,11 @@ app.delete("/books/:bookId/", async (req, res, next) => {
   }
 });
 
-// ==========================================
-// 404 UNKNOWN ROUTE HANDLER
-// ==========================================
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// ==========================================
-// GLOBAL ERROR HANDLER
-// ==========================================
 app.use((err, req, res, next) => {
   console.error("Unhandled Error:", err.stack || err.message);
   res.status(500).json({ message: "Internal server error" });
 });
-
