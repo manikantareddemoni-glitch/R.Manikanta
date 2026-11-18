@@ -402,7 +402,7 @@ select * from user;
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `400 Bad Request`
 
-![04. Register - Error: Missing Required Fields](screenshots/04-register-missing-fields.png)
+![04. Register - Error: Missing Required Fields](screenshots/04-register-error-missing-fields.png)
 
 ---
 
