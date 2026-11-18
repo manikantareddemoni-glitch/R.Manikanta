@@ -372,76 +372,116 @@ select * from user;
 
 ## 📸 Screenshots
 
-> All API endpoints verified in Postman against the live Render deployment ([https://r-manikanta-4.onrender.com](https://r-manikanta-4.onrender.com)), and database state verified in the SQLite CLI.
+> All 12 API endpoints and test cases verified in Postman against the live Render cloud deployment ([https://r-manikanta-4.onrender.com](https://r-manikanta-4.onrender.com)), and database state verified in the SQLite CLI.
 
-### 0. API Directory & Student Info (GET /)
+### 01. Root - Student Info & API Directory (GET /)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/](https://r-manikanta-4.onrender.com/)
 - **Expected HTTP Status:** `200 OK`
 
-![API Directory](screenshots/00-root-api-directory.png)
+![01. Root - Student Info & API Directory](screenshots/01-root-student-info.png)
 
 ---
 
-### 1. Register Success (POST /register/)
+### 02. Register - Success (POST /register/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `201 Created`
 
-![Register Success](screenshots/01-register-success.png)
+![02. Register - Success](screenshots/02-register-success.png)
 
 ---
 
-### 2. Register Existing Username (POST /register/)
+### 03. Register - Error: User Already Exists (POST /register/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `400 Bad Request`
 
-![Register Existing User](screenshots/02-register-existing-user.png)
+![03. Register - Error: User Already Exists](screenshots/03-register-existing-user.png)
 
 ---
 
-### 3. Register Validation Error - Password Too Short (POST /register/)
+### 04. Register - Error: Missing Required Fields (POST /register/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
 - **Expected HTTP Status:** `400 Bad Request`
 
-![Register Validation Error](screenshots/03-register-validation-error.png)
+![04. Register - Error: Missing Required Fields](screenshots/04-register-missing-fields.png)
 
 ---
 
-### 4. Login Success Returning JWT Token (POST /login/)
+### 05. Register - Error: Password Too Short (POST /register/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/register/](https://r-manikanta-4.onrender.com/register/)
+- **Expected HTTP Status:** `400 Bad Request`
+
+![05. Register - Error: Password Too Short](screenshots/05-register-password-short.png)
+
+---
+
+### 06. Login - Success Returning JWT Token (POST /login/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `200 OK`
 
-![Login Success JWT](screenshots/04-login-success-jwt.png)
+![06. Login - Success](screenshots/06-login-success-jwt.png)
 
 ---
 
-### 5. Login Unknown User (POST /login/)
+### 07. Login - Error: Invalid User (POST /login/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `400 Bad Request`
 
-![Login Unknown User](screenshots/05-login-unknown-user.png)
+![07. Login - Error: Invalid User](screenshots/07-login-unknown-user.png)
 
 ---
 
-### 6. Login Wrong Password (POST /login/)
+### 08. Login - Error: Invalid Password (POST /login/)
 - **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
 - **Expected HTTP Status:** `400 Bad Request`
 
-![Login Wrong Password](screenshots/06-login-wrong-password.png)
+![08. Login - Error: Invalid Password](screenshots/08-login-wrong-password.png)
 
 ---
 
-### 7. SQLite CLI Showing Hashed Passwords & Salting
-![SQLite CLI Users Hashed](screenshots/07-sqlite-cli-users-hashed.png)
+### 09. Login - Error: Missing Password (POST /login/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/login/](https://r-manikanta-4.onrender.com/login/)
+- **Expected HTTP Status:** `400 Bad Request`
+
+![09. Login - Error: Missing Password](screenshots/09-login-missing-password.png)
 
 ---
 
-### 8. JWT Token Decoding & Signature Verification in Terminal
-![JWT Token Verification and Decoding in Terminal](screenshots/08-jwt-io-decoded-token.png)
+### 10. Books - GET /books/ (GET /books/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/books/?limit=3](https://r-manikanta-4.onrender.com/books/?limit=3)
+- **Expected HTTP Status:** `200 OK`
+
+![10. Books - GET /books/](screenshots/10-books-get-all.png)
 
 ---
 
-### 9. Terminal Showing Server Running
-![Terminal Server Running](screenshots/09-terminal-server-running.png)
+### 11. Books - GET /books/:bookId/ (GET /books/1/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/books/1/](https://r-manikanta-4.onrender.com/books/1/)
+- **Expected HTTP Status:** `200 OK`
+
+![11. Books - GET /books/:bookId/](screenshots/11-books-get-single.png)
+
+---
+
+### 12. 404 Route Not Found (GET /unknown-route-test/)
+- **Render Live URL:** [https://r-manikanta-4.onrender.com/unknown-route-test/](https://r-manikanta-4.onrender.com/unknown-route-test/)
+- **Expected HTTP Status:** `404 Not Found`
+
+![12. 404 Route Not Found](screenshots/12-error-404-not-found.png)
+
+---
+
+### 13. SQLite CLI Showing Hashed Passwords & Salting
+![13. SQLite CLI Users Hashed](screenshots/13-sqlite-cli-users-hashed.png)
+
+---
+
+### 14. JWT Token Decoding & Signature Verification in Terminal
+![14. JWT Token Verification and Decoding in Terminal](screenshots/14-jwt-io-decoded-token.png)
+
+---
+
+### 15. Terminal Showing Server Running
+![15. Terminal Server Running](screenshots/15-terminal-server-running.png)
 
 ---
 
