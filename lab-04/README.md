@@ -355,19 +355,14 @@ sqlite3 database.db
 ```
 
 ```sql
-.headers on
-.mode column
-
--- View all registered users (showing hashes only):
-SELECT id, username, name, password FROM user;
+.tables
+select * from user;
 ```
 
 ### Real Terminal Output:
 ```text
-id  username   name                  password
---  ---------  --------------------  ------------------------------------------------------------
-1   manikanta  Reddemoni Manikanta   $2b$10$.ecW9MkUJte9Pyah58C1me/wiIFew1vwQLwpikEzjiMHEdEtrZENC
-2   rahul      Rahul Sharma          $2b$10$m3aop87AeaH47Q7JDhqQEes3/rFGEYG9M0OB6hOCJsfQTEKyhRlWG
+1|manikanta|Reddemoni Manikanta|$2b$10$.ecW9MkUJte9Pyah58C1me/wiIFew1vwQLwpikEzjiMHEdEtrZENC
+2|rahul|Rahul Sharma|$2b$10$m3aop87AeaH47Q7JDhqQEes3/rFGEYG9M0OB6hOCJsfQTEKyhRlWG
 ```
 
 > [!NOTE]
