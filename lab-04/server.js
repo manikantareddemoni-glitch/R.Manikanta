@@ -113,7 +113,7 @@ app.get("/register/", (req, res) => {
     expectedRequestBody: {
       username: "manikanta",
       name: "Reddemoni Manikanta",
-      password: "Password@123"
+      password: "secret123"
     }
   });
 });
@@ -182,7 +182,7 @@ app.get("/login/", (req, res) => {
     method: "POST",
     expectedRequestBody: {
       username: "manikanta",
-      password: "Password@123"
+      password: "secret123"
     }
   });
 });

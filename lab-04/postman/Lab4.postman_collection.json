@@ -13,8 +13,12 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/",
-          "host": ["{{base_url}}"],
-          "path": [""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            ""
+          ]
         }
       },
       "response": []
@@ -31,12 +35,17 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"Password@123\"\n}"
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"secret123\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/register/",
-          "host": ["{{base_url}}"],
-          "path": ["register", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "register",
+            ""
+          ]
         }
       },
       "response": []
@@ -53,12 +62,17 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"Password@123\"\n}"
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"name\": \"Reddemoni Manikanta\",\n  \"password\": \"secret123\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/register/",
-          "host": ["{{base_url}}"],
-          "path": ["register", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "register",
+            ""
+          ]
         }
       },
       "response": []
@@ -79,8 +93,13 @@
         },
         "url": {
           "raw": "{{base_url}}/register/",
-          "host": ["{{base_url}}"],
-          "path": ["register", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "register",
+            ""
+          ]
         }
       },
       "response": []
@@ -101,8 +120,13 @@
         },
         "url": {
           "raw": "{{base_url}}/register/",
-          "host": ["{{base_url}}"],
-          "path": ["register", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "register",
+            ""
+          ]
         }
       },
       "response": []
@@ -119,12 +143,17 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"manikanta\",\n  \"password\": \"Password@123\"\n}"
+          "raw": "{\n  \"username\": \"manikanta\",\n  \"password\": \"secret123\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/login/",
-          "host": ["{{base_url}}"],
-          "path": ["login", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "login",
+            ""
+          ]
         }
       },
       "response": []
@@ -141,12 +170,17 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"username\": \"non_existent_user\",\n  \"password\": \"Password@123\"\n}"
+          "raw": "{\n  \"username\": \"non_existent_user\",\n  \"password\": \"secret123\"\n}"
         },
         "url": {
           "raw": "{{base_url}}/login/",
-          "host": ["{{base_url}}"],
-          "path": ["login", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "login",
+            ""
+          ]
         }
       },
       "response": []
@@ -167,8 +201,13 @@
         },
         "url": {
           "raw": "{{base_url}}/login/",
-          "host": ["{{base_url}}"],
-          "path": ["login", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "login",
+            ""
+          ]
         }
       },
       "response": []
@@ -189,8 +228,13 @@
         },
         "url": {
           "raw": "{{base_url}}/login/",
-          "host": ["{{base_url}}"],
-          "path": ["login", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "login",
+            ""
+          ]
         }
       },
       "response": []
@@ -202,11 +246,22 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/books/?limit=3&offset=0",
-          "host": ["{{base_url}}"],
-          "path": ["books", ""],
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books",
+            ""
+          ],
           "query": [
-            { "key": "limit", "value": "3" },
-            { "key": "offset", "value": "0" }
+            {
+              "key": "limit",
+              "value": "3"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            }
           ]
         }
       },
@@ -219,8 +274,14 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/books/1/",
-          "host": ["{{base_url}}"],
-          "path": ["books", "1", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books",
+            "1",
+            ""
+          ]
         }
       },
       "response": []
@@ -232,8 +293,13 @@
         "header": [],
         "url": {
           "raw": "{{base_url}}/unknown-route-test/",
-          "host": ["{{base_url}}"],
-          "path": ["unknown-route-test", ""]
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "unknown-route-test",
+            ""
+          ]
         }
       },
       "response": []
@@ -247,4 +313,3 @@
     }
   ]
 }
-

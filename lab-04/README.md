@@ -211,7 +211,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmlrYW50YSIsImlhdCI6MTc
 {
   "username": "manikanta",
   "name": "Reddemoni Manikanta",
-  "password": "Password@123"
+  "password": "secret123"
 }
 ```
 
@@ -219,7 +219,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hbmlrYW50YSIsImlhdCI6MTc
 ```json
 {
   "username": "manikanta",
-  "password": "Password@123"
+  "password": "secret123"
 }
 ```
 
